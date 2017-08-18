@@ -1,0 +1,30 @@
+name: Chip Dyno (Chip4Dyno)
+type: theme
+base theme: classy
+description: A car tuning site theme.
+package: Core
+# version: VERSION
+# core: 8.x
+
+libraries:
+  - chipdyno/global-styling
+
+regions:
+    chipdyno_header: 'Header section'
+    chipdyno_language: 'Language Switcher'
+    chipdyno_header_slider: 'Header Slider'
+    chipdyno_home_search: 'Home Page Search'
+    homepage_sidebar_first: 'Homepage Sidebar First'
+    chipdyno_sidebar_first: 'Page Sidebar First'
+    chipdyno_content: 'Page Content'
+    chipdyno_left_region: 'left section'
+    chipdyno_right_region: 'Right section'
+    chipdyno_center_region: 'Center section'
+    chipdyno_upperfooter: 'Upper footer section'
+    chipdyno_footer: 'Footer section'
+  
+# Information added by Drupal.org packaging script on 2016-02-03
+version: '8.3.2'
+core: '8.x'
+project: 'drupal'
+datestamp: 1454490380

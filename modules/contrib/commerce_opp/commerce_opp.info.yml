@@ -1,0 +1,14 @@
+name: Commerce Open Payment Platform
+type: module
+description: 'Provides Commerce integration for Open Payment Platform payment gateway.'
+package: Commerce (contrib)
+# core: 8.x
+# temporarily remove dependency to enable Composer usage (re-include after commerce_payment is officially present in Commerce repository)
+#dependencies:
+#  - commerce_payment
+
+# Information added by Drupal.org packaging script on 2016-12-21
+version: '8.x-1.0-alpha9'
+core: '8.x'
+project: 'commerce_opp'
+datestamp: 1482310386

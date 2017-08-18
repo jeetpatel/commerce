@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Implements hook_cron().
+ */
+function commerce_opp_cron() {
+  /** @var \Drupal\commerce_opp\PaymentManager $payment_manager */
+  $payment_manager = \Drupal::service('commerce_opp.payment_manager');
+  $payment_manager->cleanupUnusedPaymentEntities();
+}

@@ -1,0 +1,20 @@
+commerce_opp.callback:
+  path: '/commerce-opp/callback'
+  defaults:
+    _title: 'Commerce Open Payment Platform Transaction feedback'
+    _controller: '\Drupal\commerce_opp\Controller\TransactionFeedbackController::callback'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+commerce_opp.copy_and_pay:
+  path: '/commerce-opp/pay/{commerce_order}/{payment_redirect_key}'
+  defaults:
+    _title: 'Payment'
+    _controller: '\Drupal\commerce_opp\Controller\CopyAndPayController::widget'
+  requirements:
+    _custom_access:  '\Drupal\commerce_opp\Controller\CopyAndPayController::access'
+    commerce_order: \d+
+  options:
+    no_cache: TRUE

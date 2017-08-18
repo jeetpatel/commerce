@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * Override hook alter.
+ * @author Jeet
+ */
+
+/**
+ * Alter lanuage link.
+ */
+//function chipdyno_languageicons_link_content(&$variables) {
+//  //kint($variables);die;
+//}
+function chipdyno_preprocess_page(&$variables) {
+  
+}

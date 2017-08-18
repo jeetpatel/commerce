@@ -1,0 +1,4 @@
+services:
+  commerce_opp.payment_manager:
+    class: Drupal\commerce_opp\PaymentManager
+    arguments: ['@entity_type.manager', '@http_client', '@module_handler']

@@ -1,0 +1,24 @@
+global-styling:
+  version: VERSION
+  css:
+    theme:
+#      css/thumbs2.css: {}
+#      css/thumbnail-slider.css: {}
+      css/style.css: {}
+#      css/flexslider.css: {}
+      css/app.css: {}
+  js:
+#    js/jquery.flexslider.js: {}
+    js/modernizr.js: {}
+    js/responsive-nav.js: {} 
+#    js/slider.js: {}
+    js/general.js: {}    
+#    js/thumbnail-slider.js: {}
+#    /libraries/colorbox/jquery.colorbox-min.js: {}
+#    /modules/colorbox/js/colorbox.js: {}
+#    /modules/colorbox/styles/default/colorbox_style.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.ui
+    - core/jquery.once
+    - core/drupal

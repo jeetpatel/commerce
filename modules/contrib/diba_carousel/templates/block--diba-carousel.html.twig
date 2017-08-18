@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Default theme implementation to print diba_carousel.
+ */
+#}
+{% set els = elements.content.result|length %}
+{% if els > 0 %}
+  <div id="diba-carousel" class="carousel slide" data-ride="carousel">
+    
+    <ul class="carousel-inner" role="listbox">
+      {% for item in elements.content.result %}
+        {% set class_item = (loop.first) ? 'class = "item active"' : 'class = "item"' %}
+        <li {{ class_item|raw }}>
+          {% if item.image %}
+            <img src="{{ file_url(item.image) }}" alt="{{ item.title|raw }}" width="{{ item.image_width|raw }}" height="{{ item.image_height|raw }}">
+          {% endif %}
+          <div class="carousel-caption">
+            {% if item.title %}
+              <h2 class="caption-title">
+                {% if item.url %}
+                  {{ link(item.title|raw, item.url, '') }}
+                {% else %}
+                  {{ item.title|raw }}
+                {% endif %}
+              </h2>
+            {% endif %}
+            {% if item.description %}
+              <p class="caption-desc">{{ item.description|raw }}</p>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

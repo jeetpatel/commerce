@@ -1,0 +1,5 @@
+services:
+  chip_dyno_home.TwigExtension:
+    class: Drupal\chip_dyno_home\TwigExtension
+    tags:
+      - {name: twig.extension}

@@ -1,0 +1,9 @@
+type: module
+name: ChipDynoHome
+description: 'Various blocks, pages, and functions for developers.'
+package: System
+
+# Information added by Drupal.org packaging script on 2017-04-23
+core: '8.x'
+project: 'chip_dyno_home'
+datestamp: 1492989248

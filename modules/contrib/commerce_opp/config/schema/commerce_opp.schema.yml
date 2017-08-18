@@ -1,0 +1,36 @@
+commerce_payment.commerce_payment_gateway.plugin.opp:
+  type: commerce_payment_gateway_configuration
+  mapping:
+    user_id:
+      type: string
+      label: 'User ID'
+    password:
+      type: string
+      label: 'Password'
+    entity_id:
+      type: string
+      label: 'Entity/Channel ID'
+    display_label:
+      type: string
+      label: 'Display label'
+    host_prod:
+      type: string
+      label: 'Host URL (prod environment)'
+    host_test:
+      type: string
+      label: 'Host URL (test environment)'
+    brands_bank:
+      type: sequence
+      label: 'Bank Account Brands'
+      sequence:
+        type: string
+    brands_card:
+      type: sequence
+      label: 'Card Account Brands'
+      sequence:
+        type: string
+    brands_virtual:
+      type: sequence
+      label: 'Virtual Account Brands'
+      sequence:
+        type: string

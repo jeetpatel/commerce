@@ -1,0 +1,42 @@
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+    {{ content }}
+  {% endblock %}
+  
+<div id="cardropdown" class="pure-g">
+
+    <h2>You can view all our tuning files specifications online</h2>
+    <div class="pure-u-1 pure-u-md-4-24" >
+        <select name="brands" onchange="selectBrand();"><option value="none">Kies uw merk</option><option slug="alfa-romeo" value="1">Alfa Romeo</option><option slug="aston-martin" value="17">Aston Martin</option><option slug="audi" value="26">Audi</option><option slug="bentley" value="56">Bentley</option><option slug="bmw-e-series" value="62">BMW E-Series</option><option slug="bmw-f-series" value="83">BMW F-Series</option><option slug="cadillac" value="99">Cadillac</option><option slug="chevrolet" value="109">Chevrolet</option><option slug="chrysler" value="127">Chrysler</option><option slug="citroen" value="138">Citroen</option><option slug="dacia" value="159">Dacia</option><option slug="dodge" value="165">Dodge</option><option slug="daf" value="173">Daf</option><option slug="ferrari" value="177">Ferrari</option><option slug="fiat" value="190">Fiat</option><option slug="ford" value="218">Ford</option><option slug="honda" value="241">Honda</option><option slug="hyundai" value="250">Hyundai</option><option slug="infiniti" value="276">Infiniti</option><option slug="iveco" value="281">Iveco</option><option slug="jaguar" value="288">Jaguar</option><option slug="jeep" value="298">Jeep</option><option slug="kia" value="307">Kia</option><option slug="lancia" value="321">Lancia</option><option slug="landrover" value="330">Landrover</option><option slug="lexus" value="337">Lexus</option><option slug="man-vrachtwagen" value="339">MAN vrachtwagen</option><option slug="maybach" value="343">Maybach</option><option slug="mazda" value="346">Mazda</option><option slug="mclaren" value="365">Mclaren</option><option slug="mercedes" value="367">Mercedes</option><option slug="mg-rover" value="397">MG Rover</option><option slug="mini" value="405">Mini</option><option slug="mitsubishi" value="413">Mitsubishi</option><option slug="nissan" value="425">Nissan</option><option slug="opel" value="446">Opel</option><option slug="peugeot" value="473">Peugeot</option><option slug="porsche" value="499">Porsche</option><option slug="renault" value="507">Renault</option><option slug="saab" value="529">Saab</option><option slug="seat" value="533">Seat</option><option slug="skoda" value="545">Skoda</option><option slug="smart" value="556">Smart</option><option slug="ssangyoung" value="561">SsangYoung</option><option slug="subaru" value="569">Subaru</option><option slug="suzuki" value="579">Suzuki</option><option slug="toyota" value="590">Toyota</option><option slug="volkswagen" value="609">Volkswagen</option><option slug="volvo" value="632">Volvo</option></select>
+    </div>
+    <div class="pure-u-1 pure-u-md-4-24">
+        <select name="models" disabled="" onchange="selectModel();">
+            <option value="1">Choose a model</option>
+        </select>
+    </div>
+    <div class="pure-u-1 pure-u-md-4-24" >
+        <select name="products" disabled="" onchange="selectProduct();">
+            <option value="1">Choose an generation</option>
+        </select>
+    </div>
+    <div class="pure-u-1 pure-u-md-4-24" >
+        <select name="products" disabled="" onchange="selectProduct();">
+            <option value="1">Choose an engine</option>
+        </select>
+    </div>
+    <div class="pure-u-1 pure-u-md-4-24last">
+        <a href=""><img src="/themes/chipdyno/images/more.png"></a>
+    </div>
+</div>
