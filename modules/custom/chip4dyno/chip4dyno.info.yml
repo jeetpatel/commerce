@@ -1,0 +1,6 @@
+name: chip4dyno
+description: This is common module for chip4dyno.
+package: Custom
+
+type: module
+core: 8.x

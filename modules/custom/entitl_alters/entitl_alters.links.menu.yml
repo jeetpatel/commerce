@@ -1,0 +1,7 @@
+ttn_entitl_alters.admin_settings:
+  title: 'TTN Entitlement Date Settings'
+  parent: system.admin_config_ui
+  description: ''
+  route_name: ttn_entitl_alters.date
+  
+

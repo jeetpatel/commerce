@@ -1,0 +1,5 @@
+name: ttn_entitl_alters
+type: module
+description: 'my custom module for altering entitled restructure form'
+package: Custom
+core: 8.x

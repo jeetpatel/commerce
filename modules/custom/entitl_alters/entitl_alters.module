@@ -1,0 +1,385 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
+use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Render\Element;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Core\Access\AccessResult;
+
+
+/**
+ * hook_form_alter
+ */
+function ttn_entitl_alters_form_alter(&$form, $form_state, $form_id) {
+  //  kint($form);die;
+   $currentuseruid = \Drupal::currentUser()->id();
+   $currentuserrole = \Drupal::currentUser()->getRoles();
+   
+    if ($form_id =='node_restructure_form_form'){
+        
+    
+        $form['#entity_builders'][] = 'ttn_entitl_alters_node_builder';
+        $form['actions']['unpublish']['#access'] = FALSE;
+        $form['actions']['publish']['#value'] = t('Submit');
+        $form['field_form_status']['#access'] = FALSE;
+        $form['effectivedate'] = array(
+                '#type' => 'hidden',
+                );
+        $form['#title'] = t('Add Entitlement');
+
+       $form['field_employee_reference']['widget'][0]['target_id']['#type'] ='textfield';
+       unset($form['field_employee_reference']['widget'][0]['target_id']['#selection_settings']);
+       $form['field_employee_reference']['widget'][0]['target_id']['#autocomplete_route_name'] = 'ttn_entitl_alters.autocomplete';
+       $form['field_employee_reference']['widget'][0]['target_id']['#autocomplete_route_parameters'] = array('field_name' => 'user');
+       }
+       
+    if ($form_id == 'node_restructure_form_edit_form'){
+        $node = \Drupal::routeMatch()->getParameter('node');
+        $record = $node->get('field_employee_reference')->getValue();
+        $usertargetid=$record[0]['target_id'];
+        $account = \Drupal\user\Entity\User::load($usertargetid);
+        $name = $account->get('name')->value;
+        $fieldname = $account->get('field_name')->value;
+        $name=$fieldname."(".$name.")";
+        $revision=array();
+        if(in_array("authorised_user",$currentuserrole) && in_array("authenticated",$currentuserrole) && count($currentuserrole)==2){
+        $form['#title'] = t('Reimbursement Restructuring');
+        }
+        elseif(in_array("authorised_user",$currentuserrole) && in_array("hr_team",$currentuserrole) && count($currentuserrole)==3){
+            $form['#title'] = t(' Edit Entitlement of : '.$name);
+            $form['field_employee_reference']['#access'] = FALSE;
+        }
+        else{
+             $form['#title'] = t(' Edit Entitlement of : '.$name);
+             $form['field_employee_reference']['#access'] = FALSE;
+        }
+    
+        //$form['field_employee_reference']['#disabled'] = TRUE;
+        $form['field_employee_reference']['#access'] = FALSE;
+        $form['actions']['unpublish']['#access'] = FALSE;
+        $form['actions']['delete']['#access'] = FALSE;
+        $form['actions']['publish']['#value'] = t('Update');
+        $nid = $node->nid->value; 
+        $nodemain = Node::load($nid);
+        $vids = \Drupal::entityManager()->getStorage('node')->revisionIds($nodemain);
+        $rvides = array_reverse($vids, TRUE);
+        $nodemaxlimit="";
+        foreach($rvides as $key => $value)
+        {
+          $rev = node_revision_load($value)->getRevisionAuthor();
+          $roles = $rev->getRoles();
+ 
+            if(in_array("hr_team",$roles))
+            {
+                $nodemaxlimit = node_revision_load($value);
+                break; 
+            }
+        }
+
+        if($nodemaxlimit){
+            if($nodemaxlimit->get('field_effective_date')!=null)
+            $effectivedate = $nodemaxlimit->get('field_effective_date')->getValue();
+            if($nodemaxlimit->get('field_driver_salary_annum')!=null)
+        $maxdriversalary = $nodemaxlimit->get('field_driver_salary_annum')->getValue();
+            if($nodemaxlimit->get('field_fuel_and_car_mainten')!=null)
+        $maxfuelandcar = $nodemaxlimit->get('field_fuel_and_car_mainten')->getValue();
+            if($nodemaxlimit->get('field_medical_expenses_annum')!=null)
+        $maxmedical = $nodemaxlimit->get('field_medical_expenses_annum')->getValue();
+            if($nodemaxlimit->get('field_telephone_bills_annu')!=null)
+        $maxtelephone = $nodemaxlimit->get('field_telephone_bills_annu')->getValue();
+            if($nodemaxlimit->get('field_lta_bills_annum')!=null)
+        $maxlta = $nodemaxlimit->get('field_lta_bills_annum')->getValue();
+        }
+        else{
+            $maxdriversalary[0]['value']="";
+            $maxfuelandcar[0]['value']="";
+            $maxmedical[0]['value']="";
+            $maxtelephone[0]['value']="";
+            $maxlta[0]['value']="";
+        }
+
+         if (count($currentuserrole) == 2 && in_array("authorised_user",$currentuserrole) && in_array("authenticated",$currentuserrole))
+         {   
+             if($effectivedate[0]['value'])
+         {
+                
+             $form['effectivedate'] = array(
+                '#type' => 'hidden',
+                '#value' => $effectivedate[0]['value'],
+                 '#attributes' => array('class' => 'effectivedate-limit'),
+                );
+         }
+         else{
+             $form['effectivedate'] = array(
+                '#type' => 'hidden',
+                '#value' => "",
+                 '#attributes' => array('class' => 'effectivedate-limit'),
+                );
+         }
+        
+        if($maxtelephone[0]['value'] >= 0)
+        {
+        $form['field_telephone_bills_annu']['widget'][0]['value']['#title'] = t('Telephone and Internet Reimbursement | Max Limit : INR '.$maxtelephone[0]['value'].'/-*');
+        }
+        else{
+        $form['field_telephone_bills_annu']['widget'][0]['value']['#title'] = t('Telephone and Internet Reimbursement');
+        }
+        if($maxfuelandcar[0]['value'] >= 0)
+        {
+            $form['field_fuel_and_car_mainten']['widget'][0]['value']['#title'] = t('Vehicle Running and Maintainence Expenses | Max Limit : INR '.$maxfuelandcar[0]['value'].'/-*');
+
+        }
+        else {
+            $form['field_fuel_and_car_mainten']['widget'][0]['value']['#title'] = t('Vehicle Running and Maintainence Expenses');
+        }
+        if($maxdriversalary[0]['value'] >= 0){
+            $form['field_driver_salary_annum']['widget'][0]['value']['#title'] = t('Driver Salary | Max Limit : INR'.$maxdriversalary[0]['value'].'/-*');
+
+        }
+        else{
+            $form['field_driver_salary_annum']['widget'][0]['value']['#title'] = t('Driver Salary');
+            
+        }
+                if($maxlta[0]['value'] >= 0){
+            $form['field_lta_bills_annum']['widget'][0]['value']['#title'] = t('LTA(Leave Travel Allowance) | Max Limit : INR '.$maxlta[0]['value'].'/-*');
+
+        }
+        else{
+            $form['field_lta_bills_annum']['widget'][0]['value']['#title'] = t('LTA(Leave Travel Allowance)');
+            
+        }
+                if($maxmedical[0]['value'] >= 0){
+           $form['field_medical_expenses_annum']['widget'][0]['value']['#title'] = t('Medical Reimbursement | Max Limit : INR '.$maxmedical[0]['value'].'/-*');
+
+        }
+        else{
+            $form['field_medical_expenses_annum']['widget'][0]['value']['#title'] = t('Medical Reimbursement');
+            
+        }
+          
+        $form['field_driver_salary_annum']['widget'][0]['value']['#max']=  $maxdriversalary[0]['value'];
+        $form['field_fuel_and_car_mainten']['widget'][0]['value']['#max']= $maxfuelandcar[0]['value'];
+        $form['field_medical_expenses_annum']['widget'][0]['value']['#max']= $maxmedical[0]['value'];
+        $form['field_telephone_bills_annu']['widget'][0]['value']['#max']= $maxtelephone[0]['value'];
+        $form['field_lta_bills_annum']['widget'][0]['value']['#max']= $maxlta[0]['value'];
+         }
+      
+    }
+ 
+  }
+  
+  /**
+ * Implements hook_preprocess_HOOK() for block.html.twig.
+ */
+function ttn_entitl_alters_preprocess_block(&$vars) {
+  if($vars['derivative_plugin_id'] == 'entitlement') {
+    //-- This stops the block being cache in drupal 8
+    $vars['#cache']['max-age'] = 0;
+
+  }
+}
+
+/*
+ * Calculation of Title
+ */
+
+function ttn_entitl_alters_node_builder($entity_type, NodeInterface $node, $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+    $now = new DateTime();
+    $date = $now->format('d-m-y h:i:sa');
+    $currentyear = $now->format('Y');
+    $nextyear = $currentyear + 1;
+    $username = \Drupal::currentUser()->getUsername();
+    $userid = \Drupal::currentUser()->id();
+    if($node->getType() == "restructure_form"){
+        $node->setTitle("Restructure Form:".$username."[".$userid."]:". $currentyear."-".$nextyear);
+    }
+}
+
+function ttn_entitl_alters_node_presave(Drupal\node\NodeInterface $node) {
+    $userid="";
+    global $base_url;
+    if($node->getType()=="restructure_form" && $node->isNew()==1) {
+      $userdata = $node->get('field_employee_reference')->getValue();
+        if(is_array($userdata) && count($userdata) == 1 ){
+        $userid= $userdata[0]['target_id'];
+        $account = \Drupal\user\Entity\User::load($userid); 
+        $username = $account->get('name')->value;
+        $name = $account->get('field_name')->value;
+                $nids = \Drupal::entityQuery('node')
+                ->condition('type','restructure_form')
+                ->condition('field_employee_reference',$userid)
+                ->execute();
+            if(empty($nids)){
+              $node->setTitle('Entitlement of '.$name.' ['.$username.']');
+              }
+            else {
+             drupal_set_message('The Entry for '.$name.'('.$username.') already exist for this employee.', 'error');
+             $response = new Symfony\Component\HttpFoundation\RedirectResponse($base_url);
+             $response->send(); 
+             exit;   
+             }
+        }
+        }
+        
+        
+  
+   }
+
+/* Node Acess permissions for an Authorized user*/
+function ttn_entitl_alters_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account) {
+    $type = $node->bundle();
+    $current_path = \Drupal::service('path.current')->getPath();
+ $myarray = explode('/', $current_path);
+ if($type=="restructure_form"  && in_array('edit',$myarray))
+{
+ $employeereference = $node->get('field_employee_reference')->getValue();
+ $employeeuserid = $employeereference[0]['target_id'];
+ $currentuseruid = \Drupal::currentUser()->id();
+ $currentuserrole = \Drupal::currentUser()->getRoles();
+ $entitconfig = \Drupal::config('config.ttn_entitlement_date');
+ $startdate = strtotime($entitconfig->get('entitle.startdate'));
+ $enddate = strtotime($entitconfig->get('entitle.enddate'));  
+ $currentdate = strtotime(date("Y-m-d"));
+if(in_array("authorised_user",$currentuserrole) && in_array("hr_team",$currentuserrole))
+{
+  
+switch ($op) {
+    case 'update':
+        // kint($account);
+      if ($account->hasPermission('edit any ' . $type . ' content', $account)) {
+   
+        return AccessResult::allowed()->cachePerPermissions();
+      }
+      else {
+      
+    return AccessResult::forbidden(); 
+       }
+
+
+
+    default:
+      return AccessResult::neutral();
+  }
+}
+   
+elseif($employeeuserid==$currentuseruid && $currentdate >= $startdate && $currentdate <= $enddate && in_array("authorised_user",$currentuserrole))
+{
+switch ($op) {
+    case 'update':
+        // kint($account);
+      if ($account->hasPermission('edit any ' . $type . ' content', $account)) {
+   
+        return AccessResult::allowed()->cachePerPermissions();
+      }
+      else {
+      
+    return AccessResult::forbidden(); 
+       }
+
+
+
+    default:
+      return AccessResult::neutral();
+  }
+}
+else
+{
+
+      return AccessResult::forbidden();
+}
+}
+
+
+}
+/*
+ * Change node__field_maps from string_long to string type.
+ 
+function ttn_entitl_alters_update_8001() {
+  $database = \Drupal::database();
+  $table = 'node__field_newers_reference';
+  $entity_type = 'node';
+  $field_name = 'field_newers_reference';
+
+  $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
+
+  if (is_null($field_storage)) {
+    return;
+  }
+
+  $rows = NULL;
+
+  if ($database->schema()->tableExists($table)) {
+    // The table data to restore after the update is completed.
+    $rows = $database->select($table, 'n')
+      ->fields('n')
+      ->execute()
+      ->fetchAll();
+  }
+
+  $new_fields = array();
+
+  // Use existing field config for new field.
+  foreach ($field_storage->getBundles() as $bundle => $label) {
+    $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
+    $new_field = $field->toArray();
+    $new_field['field_type'] = 'text';
+    $new_field['settings'] = array();
+
+    $new_fields[] = $new_field;
+  }
+
+  // Deleting field storage which will also delete bundles(fields).
+  $new_field_storage = $field_storage->toArray();
+  $new_field_storage['type'] = 'textfield';
+  $new_field_storage['settings'] = array(
+           '#type' => 'textfield',
+           '#autocomplete_route_name' => 'ttn_entitl_alters.autocomplete',
+           '#autocomplete_route_parameters' => array('field_name' => 'field_newers_reference'),
+      );
+
+  $field_storage->delete();
+
+  // Purge field data now to allow new field and field_storage with same name
+  // to be created. You may need to increase batch size.
+  field_purge_batch(10);
+
+  // Create new field storage.
+  $new_field_storage = FieldStorageConfig::create($new_field_storage);
+  $new_field_storage->save();
+
+  // Create new fields.
+  foreach ($new_fields as $new_field) {
+    $new_field = FieldConfig::create($new_field);
+    $new_field->save();
+  }
+
+  // Restore existing data in the same table.
+  if (!is_null($rows)) {
+    foreach ($rows as $row) {
+      $database->insert($table)
+        ->fields((array) $row)
+        ->execute();
+    }
+  }
+
+}
+ * 
+ */
+
+
+
+
+
+      
+    
+
+
+
+
+

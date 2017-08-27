@@ -1,0 +1,16 @@
+ttn_entitl_alters.date:
+ path: '/ttn_entitlement-valid-date'
+ defaults:
+   _form: 'Drupal\ttn_entitl_alters\Form\TtnEntitlementDateForm'
+   _title: 'TTN Entitlement Date Configuration'
+ requirements:
+   _permission: 'admin_hr entitlement'
+   
+ttn_entitl_alters.autocomplete:
+  path: '/user-autocomplete/{field_name}'
+  defaults:
+    _controller: 'Drupal\ttn_entitl_alters\Controller\AutocompleteController::handleAutocomplete'
+    _format: json
+  requirements:
+    _access: 'TRUE'
+

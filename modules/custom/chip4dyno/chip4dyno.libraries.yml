@@ -1,0 +1,7 @@
+fe_alters:
+  version: VERSION
+  js:
+    js/custom.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
