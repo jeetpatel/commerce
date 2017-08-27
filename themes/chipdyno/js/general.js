@@ -10,7 +10,10 @@ jQuery(document).ready(function(){
    }
     if (jQuery('.layout-sidebar-first').length>0) {
         var height = jQuery('.layout_content_right').height();
-       jQuery('.layout-sidebar-first').css('min-height',parseInt(height)+30+'px');
+        var sidebarHeight = jQuery('.layout-sidebar-first').height();
+        if (parseInt(sidebarHeight) < parseInt(height)) {
+            jQuery('.layout-sidebar-first').css('min-height',parseInt(height)+30+'px');
+        }
     }
     if (jQuery('.recent-content-slider').length>0) {
         jQuery('.recent-content-slider').bxSlider({
