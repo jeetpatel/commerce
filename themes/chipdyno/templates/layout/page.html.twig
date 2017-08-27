@@ -60,7 +60,12 @@
 <main class="wrap colorBG middle_content">
     <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
 <div class="container">
-    
+{%
+    set content_classes = [
+        page.chipdyno_sidebar_first is empty ? 'layout-content col-sm-12',
+        page.chipdyno_sidebar_first ? 'layout-content layout_content_right'
+    ]
+%}    
     {% if page.chipdyno_sidebar_first %}
       <div class="layout-sidebar-first" role="complementary">
         {{ page.chipdyno_sidebar_first }}
@@ -68,7 +73,7 @@
     {% endif %} 
     
     
-    <div class="layout-content layout_content_right">
+    <div {{ content_attributes.addClass(content_classes) }}>
       {{ page.chipdyno_content }}
     </div>{# /.layout-content #}
 

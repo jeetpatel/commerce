@@ -163,7 +163,7 @@ body {
 
 .wrap h2 {
   color: #009fdb;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
   text-transform: uppercase;
@@ -194,7 +194,7 @@ body {
   display: inline-block;
   margin-top: 10px;
   padding: 7px 42px 6px 26px;
-  background: #0563a4 url(/media/img/buttons/btn_block_right.png) no-repeat right 0;
+  background: #0563a4 url(/themes/chipdyno/imahes/btn_block_right.png) no-repeat right 0;
   color: #fff;
   border-bottom: 1px solid #0e4196;
   text-decoration: none;
@@ -238,7 +238,7 @@ a.projectsBlock img {
 
 .layout_content_right {
   float: left;
-  width: 77%;
+  width: 76.5%;
   margin-left: 10px; }
 
 .wrap {
@@ -570,6 +570,14 @@ table.responsive thead {
   line-height: normal;
   background: #EEEEEE;
   vertical-align: top; }
+
+table.responsive thead th {
+  padding: 4px;
+  border-right: 1px solid #ccc; }
+table.responsive tbody td {
+  padding: 3px; }
+table.responsive td.is-active {
+  background: none; }
 
 .view-commerce-cart-form table.responsive tr td, .view-commerce-checkout-order-summary table.responsive tr td {
   border-bottom: 1px solid #ddd;
@@ -1525,5 +1533,126 @@ table.responsive thead {
 
 .top-nav1 .wrap {
   background: #3f3f3f; }
+
+.edit-login .fieldset-legend {
+  font-weight: bold;
+  color: #4a4848; }
+
+.form-item, .form-actions {
+  margin-bottom: 2px; }
+
+.buy-credits-list {
+  clear: both; }
+
+.view-buy-credits {
+  border: 1px solid #DDD;
+  padding: 0px;
+  background: #FFF;
+  margin-bottom: 35px; }
+
+.credits-list {
+  border-top: 1px solid #DDD;
+  padding: 8px 5px 8px 5px;
+  vertical-align: middle;
+  width: 99%; }
+  .credits-list form input.button {
+    margin-top: 0px; }
+
+.credits-list .field--name-title {
+  float: left;
+  width: 45%;
+  padding-top: 9px; }
+
+.credits-list .field--name-field-perfile-price {
+  width: 130px;
+  display: inline-block;
+  margin: 0 8px;
+  padding: 7px 6px;
+  border-radius: 3px;
+  color: #fff;
+  font-weight: 700;
+  font-size: .929rem;
+  background-color: #43a047; }
+  .credits-list .field--name-field-perfile-price .field__label {
+    font-size: 12px;
+    font-weight: normal;
+    float: left;
+    padding-right: 5px; }
+  .credits-list .field--name-field-perfile-price .field__item {
+    float: left; }
+
+.credits-list .field--name-price {
+  float: left;
+  width: 10%; }
+  .credits-list .field--name-price .field__label {
+    display: none; }
+  .credits-list .field--name-price .field__item {
+    padding-top: 9px; }
+
+.credits-list .field--name-variations {
+  width: 25%;
+  float: right; }
+
+.view-buy-credits .view-header h3 {
+  padding: 15px 10px;
+  border-bottom: 1px solid #DDD; }
+.view-buy-credits .view-header table th {
+  font-weight: bold; }
+.view-buy-credits .view-header p {
+  padding: 0px 10px; }
+
+.buy-credits-header {
+  margin: 15px 0px 0px 10px; }
+  .buy-credits-header table {
+    margin: 0px; }
+    .buy-credits-header table .choose-package {
+      width: 44%; }
+
+.tabs ul.primary {
+  list-style: none;
+  margin: 0 0 0.5em;
+  padding: 0; }
+
+.tabs ul.primary li {
+  border-right: 1px solid #2d71af !important;
+  margin: 0px; }
+
+.tabs ul.primary li a {
+  color: #2d71af !important;
+  padding: 0px 4px; }
+
+.view-profiles .views-row .views-col {
+  margin-right: 10px;
+  width: 23.5% !important; }
+
+.my_account_menu li {
+  padding: 0px 0px 6px 0px; }
+  .my_account_menu li a {
+    text-decoration: none;
+    color: #255573; }
+  .my_account_menu li a:hover {
+    text-decoration: underline; }
+
+#edit-field-credits-point-0-value {
+  pointer-events: none;
+  width: 97%;
+  background: #f3f3f3;
+  border: none; }
+
+table.checkboxes ul li {
+  margin-bottom: 6px;
+  padding-left: 25px;
+  background: url(/themes/chipdyno/images/bullet_li_checkbox.png) no-repeat 0 5px; }
+
+.recent-file-row {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #DDD;
+  padding-bottom: 18px; }
+  .recent-file-row dd.title {
+    color: #524e4e;
+    padding-bottom: 7px; }
+  .recent-file-row span.date {
+    font-size: 12px;
+    color: #6b6161; }
 
 /*# sourceMappingURL=style.css.map */
