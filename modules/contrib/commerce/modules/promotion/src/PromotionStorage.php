@@ -94,7 +94,6 @@ class PromotionStorage extends CommerceContentEntityStorage implements Promotion
     // Only load promotions without coupons. Promotions with coupons are loaded
     // coupon-first in a different process.
     $query->notExists('coupons');
-    $query->sort('weight', 'ASC');
     $result = $query->execute();
     if (empty($result)) {
       return [];
@@ -106,13 +105,15 @@ class PromotionStorage extends CommerceContentEntityStorage implements Promotion
       /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
       return !empty($promotion->getUsageLimit());
     });
-    $usages = $this->usage->getUsageMultiple($promotions_with_usage_limits);
+    $usages = $this->usage->loadMultiple($promotions_with_usage_limits);
     foreach ($promotions_with_usage_limits as $promotion_id => $promotion) {
       /** @var \Drupal\commerce_promotion\Entity\PromotionInterface $promotion */
       if ($promotion->getUsageLimit() <= $usages[$promotion_id]) {
         unset($promotions[$promotion_id]);
       }
     }
+    // Sort the remaining promotions.
+    uasort($promotions, [$this->entityType->getClass(), 'sort']);
 
     return $promotions;
   }

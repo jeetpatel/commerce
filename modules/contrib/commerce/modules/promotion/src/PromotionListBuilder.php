@@ -98,7 +98,7 @@ class PromotionListBuilder extends EntityListBuilder implements FormInterface {
     // Sort the entities using the entity class's sort() method.
     uasort($entities, [$this->entityType->getClass(), 'sort']);
     // Load the usage counts for each promotion.
-    $this->usageCounts = $this->usage->getUsageMultiple($entities);
+    $this->usageCounts = $this->usage->loadMultiple($entities);
 
     return $entities;
   }
@@ -151,7 +151,15 @@ class PromotionListBuilder extends EntityListBuilder implements FormInterface {
    * {@inheritdoc}
    */
   public function render() {
-    return $this->formBuilder->getForm($this);
+    $build = $this->formBuilder->getForm($this);
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $build['pager'] = [
+        '#type' => 'pager',
+      ];
+    }
+
+    return $build;
   }
 
   /**

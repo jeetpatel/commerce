@@ -36,7 +36,10 @@
                     <div id="topOptionsWrapper">
                         {{ drupal_block('languageswitcher', FALSE) }}
                         <div id="topaccount">
-                            <div id="topaccountBtns"><a class="topDefault" href="{{ account.first_link }}" title="{{ account.first_title }}"><span>{{ account.first_label }}</span></a> <span>|</span> <a class="{{ account.second_class }}" href="{{ account.second_link }}" title="{{ account.second_title }}"><span>{{ account.second_label }}</span></a></div>
+                            <div id="topaccountBtns">
+                                <a class="topDefault" href="{{ account.first_link }}" title="{{ account.first_title }}"><span>{{ account.first_label }}</span></a> 
+                                <span>|</span> 
+                                <a class="{{ account.second_class }}" href="{{ account.second_link }}" title="{{ account.second_title }}"><span>{{ account.second_label }}</span></a></div>
                         </div>
                     </div>
                 </div>

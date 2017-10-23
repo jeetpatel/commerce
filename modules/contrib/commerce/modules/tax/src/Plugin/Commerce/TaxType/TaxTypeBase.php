@@ -32,12 +32,14 @@ abstract class TaxTypeBase extends PluginBase implements TaxTypeInterface, Conta
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatchInterface
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
   /**
    * The ID of the parent config entity.
+   *
+   * Not available while the plugin is being configured.
    *
    * @var string
    */
@@ -69,9 +71,10 @@ abstract class TaxTypeBase extends PluginBase implements TaxTypeInterface, Conta
 
     $this->entityTypeManager = $entity_type_manager;
     $this->eventDispatcher = $event_dispatcher;
-    // The plugin most know the ID of its parent config entity.
-    $this->entityId = $configuration['_entity_id'];
-    unset($configuration['_entity_id']);
+    if (array_key_exists('_entity_id', $configuration)) {
+      $this->entityId = $configuration['_entity_id'];
+      unset($configuration['_entity_id']);
+    }
     $this->setConfiguration($configuration);
   }
 
@@ -142,6 +145,7 @@ abstract class TaxTypeBase extends PluginBase implements TaxTypeInterface, Conta
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getErrors()) {
       $values = $form_state->getValue($form['#parents']);
+      $this->configuration = [];
       $this->configuration['display_inclusive'] = $values['display_inclusive'];
     }
   }
@@ -151,13 +155,6 @@ abstract class TaxTypeBase extends PluginBase implements TaxTypeInterface, Conta
    */
   public function getLabel() {
     return (string) $this->pluginDefinition['label'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDisplayLabel() {
-    return $this->t('Tax');
   }
 
   /**

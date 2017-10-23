@@ -1,0 +1,161 @@
+<?php
+
+/**
+ * @file
+ * Contains Drupal\chip4dyno\Helper\ChipdHelper.
+ */
+use Drupal\chip4dyno\Helper\ChipdHelper;
+use Drupal\node\Entity;
+use Drupal\Core\Form\FormStateInterface;
+/**
+ * Implements hook_page_attachments().
+ * @param array $page
+ */
+function chip4dyno_page_attachments(array &$page) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  $current_path = \Drupal::service('path.current')->getPath();
+  if (strstr($current_path, 'taxonomy/manage/category') || (strstr($current_path, 'node/add/turning_files')) || ($current_path == '/node') || (strstr($current_path, '/search-tuning-files'))) {
+    $page['#attached']['library'][] = 'chip4dyno/turning_file';
+  }
+  else if ($node && is_object($node)) {
+    $type = $node->getType();
+    if ($type == 'turning_files') {
+      $page['#attached']['library'][] = 'chip4dyno/turning_file';
+    }
+  }
+}
+
+function chip4dyno_form_alter(&$form, $form_state, $form_id) {
+  $request = \Drupal::request();
+  $current_path = \Drupal::service('path.current')->getPath();
+  $make = 'Choose Make';
+  $model = 'Choose Model';
+  $generation = 'Choose Generation';
+  $engine = 'Choose Engine';
+  $ecu = 'Choose ECU';
+  if (strstr($current_path, '/search-tuning-files') == TRUE) {
+    $helper = ChipdHelper::Instance();
+    $makeID = $request->get('field_make_target_id', 'All');
+    $modelID = $request->get('field_model_target_id', 'All');
+    $genID = $request->get('field_generation_target_id', 'All');
+    $engineID = $request->get('field_engine_target_id', 'All');
+    $makeTerms = $helper->getTerms(0);
+    $makeTerms = ['All' => $make] + $makeTerms;
+    $form['field_make_target_id']['#options'] = $makeTerms;
+    $form['field_make_target_id']['#default_value'] = $makeID;
+    if ($makeID != 'All') {
+      $form['field_model_target_id']['#default_value'] = $modelID;
+      $modelTerms = $helper->getTerms(-1, $makeID);
+      $modelTerms = ['All' => $model] + $modelTerms;
+      $form['field_model_target_id']['#options'] = $modelTerms;
+    }
+    else {
+      $form['field_model_target_id']['#options'] = ['All' => $model];
+    }
+    if ($modelID != 'All') {
+      $form['field_generation_target_id']['#default_value'] = $genID;
+      $genTerms = $helper->getTerms($modelID);
+      $genTerms = ['All' => $generation] + $genTerms;
+      $form['field_generation_target_id']['#options'] = $genTerms;
+    }
+    else {
+      $generationTerms = ['All' => $generation];
+      $form['field_generation_target_id']['#options'] = $generationTerms;
+    }
+    if ($genID != 'All') {
+      $form['field_engine_target_id']['#default_value'] = $engineID;
+      $engineTerms = $helper->getTerms($genID);
+      $engineTerms = ['All' => $engine] + $engineTerms;
+      $form['field_engine_target_id']['#options'] = $engineTerms;
+    }
+    else {
+      $form['field_engine_target_id']['#options'] = ['All' => $engine];
+    }
+  }
+  elseif ($form_id == 'node_turning_files_edit_form' || $form_id == 'node_turning_files_form') {
+    $helper = ChipdHelper::Instance();
+    // Add Form.
+    if ($form_id == 'node_turning_files_form') {
+      if (empty($_POST)) {
+        $makeTerms = $helper->getTerms(0);
+        $makeTerms = ['_none' => $make] + $makeTerms;
+        $form['field_make']['widget']['#options'] = $makeTerms;
+        $form['field_model']['widget']['#options'] = ['_none' => $model];
+        $generationTerms = ['_none' => $generation];
+        $form['field_generation']['widget']['#options'] = $generationTerms;
+        $form['field_engine']['widget']['#options'] = ['_none' => $engine];
+        $form['field_ecu']['widget']['#options'] = ['_none' => $ecu];
+      }
+    }
+    else if ($form_id == 'node_turning_files_edit_form') {
+      // Edit Form.
+      // Make.
+      $makes = $form['field_make']['widget']['#default_value'];
+      $makeTerms = $helper->getTerms(0);
+      $makeTerms = ['_none' => 'Choose Make'] + $makeTerms;
+      $form['field_make']['widget']['#options'] = $makeTerms;
+
+      // Model.
+      $models = $form['field_model']['widget']['#default_value'];
+      $modelTerms = $helper->getTerms(-1, $makes[0]);
+      $modelTerms = ['_none' => 'Choose Model'] + $modelTerms;
+      $form['field_model']['widget']['#options'] = $modelTerms;
+
+      // Generation.
+      $generations = $form['field_generation']['widget']['#default_value'];
+      $generationTerms = $helper->getTerms($models[0]);
+      $generationTerms = ['_none' => 'Choose Generation'] + $generationTerms;
+      $form['field_generation']['widget']['#options'] = $generationTerms;
+
+      // Engine.
+      $engines = $form['field_engine']['widget']['#default_value'];
+      $engineTerms = $helper->getTerms($generations[0]);
+      $engineTerms = ['_none' => 'Choose Engine'] + $engineTerms;
+      $form['field_engine']['widget']['#options'] = $engineTerms;
+
+      // ECU.
+      $ecus = $form['field_generation']['widget']['#default_value'];
+      $ecuTerms = $helper->getTerms(-1, $engines[0]);
+      $ecuTerms = ['_none' => 'Choose ECU'] + $ecuTerms;
+      $form['field_ecu']['widget']['#options'] = $ecuTerms;
+    }
+  }
+}
+
+/**
+ * Implements hook_preSave().
+ *
+ * @param EntityStorageInterface $storage
+ * @param type $update
+ */
+function chip4dyno_preSave(EntityStorageInterface $storage) {
+  parent::preSave($storage);
+  kint($storage); die;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the FORM_ID() form.
+ */
+function chip4dyno_form_node_turning_files_form_alter(&$form, FormStateInterface $form_state, $form_id) {kint($form_id);
+  $form['#validate'][] = '_chip4dyno_node_turning_files_form_validate';
+}
+
+/**
+ * Validates submission values in the FORM_ID() form.
+ */
+function _chip4dyno_node_turning_files_form_validate(array &$form, FormStateInterface $form_state) {
+  drupal_set_message('title', t('You have added an invalid title.'));
+  kint($form_state); die;
+  // Validation code here
+}
+
+function chip4dyno_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  
+  if ($entity->type->target_id == 'page') {
+    return;
+    drupal_set_message('You have insufficient Credit Point','error');
+    return NULL;
+    kint($entity->type->target_id); echo "</pre>";
+    kint($entity);die;
+  }
+}

@@ -13,14 +13,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Command\Command;
+use Drupal\Console\Core\Command\Command;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Parser;
 use Drupal\Console\Core\Utils\ChainQueue;
 use Drupal\Console\Core\Utils\ChainDiscovery;
 use Drupal\Console\Core\Command\Shared\InputTrait;
 use Drupal\Console\Core\Style\DrupalStyle;
-use Drupal\Console\Core\Command\Shared\CommandTrait;
 
 /**
  * Class ChainCommand
@@ -29,7 +28,6 @@ use Drupal\Console\Core\Command\Shared\CommandTrait;
  */
 class ChainCommand extends Command
 {
-    use CommandTrait;
     use InputTrait;
 
     /**
@@ -130,17 +128,32 @@ class ChainCommand extends Command
 
         if ($missingInlinePlaceHolders) {
             foreach ($inlinePlaceHolders as $inlinePlaceHolder => $inlinePlaceHolderValue) {
-                $placeholder[] = sprintf(
-                    '%s:%s',
-                    $inlinePlaceHolder,
-                    $io->ask(
-                        sprintf(
-                            'Enter value for %s placeholder',
-                            $inlinePlaceHolder
-                        ),
-                        $inlinePlaceHolderValue
-                    )
-                );
+                if (is_array($inlinePlaceHolderValue)) {
+                    $placeholder[] = sprintf(
+                        '%s:%s',
+                        $inlinePlaceHolder,
+                        $io->choice(
+                            sprintf(
+                                $this->trans('commands.chain.messages.select-value-for-placeholder'),
+                                $inlinePlaceHolder
+                            ),
+                            $inlinePlaceHolderValue,
+                            current($inlinePlaceHolderValue)
+                        )
+                    );
+                } else {
+                    $placeholder[] = sprintf(
+                        '%s:%s',
+                        $inlinePlaceHolder,
+                        $io->ask(
+                            sprintf(
+                                $this->trans('commands.chain.messages.enter-value-for-placeholder'),
+                                $inlinePlaceHolder
+                            ),
+                            $inlinePlaceHolderValue
+                        )
+                    );
+                }
             }
             $input->setOption('placeholder', $placeholder);
         }
@@ -158,7 +171,7 @@ class ChainCommand extends Command
 
         $file = $input->getOption('file');
         if (!$file) {
-            $io->error($this->trans('commands.chain.messages.missing_file'));
+            $io->error($this->trans('commands.chain.messages.missing-file'));
 
             return 1;
         }
@@ -169,7 +182,7 @@ class ChainCommand extends Command
         if (!$fileSystem->exists($file)) {
             $io->error(
                 sprintf(
-                    $this->trans('commands.chain.messages.invalid_file'),
+                    $this->trans('commands.chain.messages.invalid-file'),
                     $file
                 )
             );
@@ -180,6 +193,12 @@ class ChainCommand extends Command
         // Resolve inlinePlaceHolders
         $chainContent = $this->chainDiscovery->getFileContents($file);
         $inlinePlaceHolders = $this->chainDiscovery->extractInlinePlaceHolders($chainContent);
+
+        foreach ($inlinePlaceHolders as $inlinePlaceHolder => $inlinePlaceHolderValue) {
+            if (is_array($inlinePlaceHolderValue)) {
+                $inlinePlaceHolders[$inlinePlaceHolder] = current($inlinePlaceHolderValue);
+            }
+        }
 
         $placeholder = $input->getOption('placeholder');
         if ($placeholder) {

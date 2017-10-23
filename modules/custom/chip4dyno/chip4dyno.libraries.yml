@@ -1,7 +1,9 @@
-fe_alters:
-  version: VERSION
+turning_file:
+  version: 1.0
   js:
     js/custom.js: {}
+  css:
+      theme:
+        css/style.css: {}
   dependencies:
     - core/jquery
-    - core/drupalSettings

@@ -2005,3 +2005,31 @@ table.checkboxes ul li {
         color: #6b6161;
     }    
 }
+.file_changed {
+    font-size: 12px;
+    color: #6b6161;
+}
+.layout_content_right .node-turning-files-edit-form,
+.layout_content_right .node-turning-files-form{
+.field--type-language,.field--type-entity-reference,
+.js-form-type-textfield,.field--type-list-integer,
+.field--type-email,.field--type-list-string,
+.js-form-type-tel{
+    width:46%; float:left;margin-right: 20px;
+}
+#edit-preview{display: none;}
+.intl-tel-input{width: 100%;}
+.js-form-type-textarea{padding-top: 10px;}
+.form-actions{float: left; clear: both;}
+.js-form-type-checkbox label{margin: 0px 0px 0px 5px;}
+}
+.view-search-tuningfile{
+    .form-type-select{
+        width: 23%;
+    }
+}
+
+.view-search-tuningfile .list-rows{margin-top: 5px; padding-top: 10px;
+border-bottom: 1px solid #DDD;}
+.search_input{position: relative; top: 15px;}
+.entity-title{font-weight: bold;color: #009fdb;}

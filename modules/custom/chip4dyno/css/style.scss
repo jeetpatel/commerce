@@ -1,0 +1,42 @@
+/* 
+    Created on : 10 Sep, 2017, 2:14:45 PM
+    Author     : jeet
+*/
+label[for="edit-field-category-0-target-id"]{
+    display: none;
+}
+#edit-parent{
+    width: 50%;
+    height: auto;
+    min-height: 300px;
+}
+.layout_content_right .node-turning-files-edit-form,
+.layout_content_right .node-turning-files-form{
+.field--type-language,.field--type-entity-reference,
+.js-form-type-textfield,.field--type-list-integer,
+.field--type-email,.field--type-list-string{
+    width:46%; float:left;margin-right: 20px;
+}
+.field--name-body{
+    clear: both;
+}
+.fieldset-legend{font-weight: bold;}
+fieldset.field-group-fieldset > legend{
+    display: block;
+    width: 100%;
+    position: relative;
+    top: -10px;
+    left: -10px;
+}
+#tuning-information,#tuning-file-detail,
+#file-modify,
+#extra-information,
+#vehicle-information{
+    float: left;    
+    background: #FFF;
+    padding: 10px;
+}
+.form-actions{float: left; clear: both;}
+.js-form-item-field-email-0-value{display: none;}
+}
+#edit-field-tuning-options--wrapper{display: none;}

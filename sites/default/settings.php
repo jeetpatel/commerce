@@ -764,14 +764,18 @@ $settings['file_scan_ignore_directories'] = [
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $config_directories['sync'] = '../config/sync';
-$databases['default']['default'] = array (
-  'database' => 'chipd_live',
-  'username' => 'root',
-  'password' => 'root',
-  'prefix' => '',
-  'host' => 'localhost',
-  'port' => '3306',
-  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-  'driver' => 'mysql',
-);
+if (file_exists('/mnt/jeet/www/local/drupaldb/chipc-settings.php')) {
+  include_once '/mnt/jeet/www/local/drupaldb/chipc-settings.php';
+} else {
+  $databases['default']['default'] = array (
+    'database' => 'ssshoysq_chipc',
+    'username' => 'ssshoysq_chipd',
+    'password' => 'pV#nqC2Rt)mg',
+    'prefix' => '',
+    'host' => 'localhost',
+    'port' => '3306',
+    'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+    'driver' => 'mysql',
+  );
+}
 $settings['install_profile'] = 'standard';

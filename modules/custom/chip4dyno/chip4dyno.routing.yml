@@ -1,0 +1,12 @@
+chip4dyno.category:
+  path: '/chip4dyno/{parent_id}/{term_id}'
+  defaults:
+    _controller: '\Drupal\chip4dyno\Controller\CategoryController::getCategory'
+  requirements:
+    _permission: 'access content'
+chip4dyno.tuning-options:
+  path: '/chip4dyno/tuning-options/{tuning_id}'
+  defaults:
+    _controller: '\Drupal\chip4dyno\Controller\CategoryController::getTuningOptions'
+  requirements:
+    _permission: 'access content'

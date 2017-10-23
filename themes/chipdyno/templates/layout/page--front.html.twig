@@ -47,14 +47,15 @@
   <header role="banner">
     {{ page.chipdyno_header }}
   </header>
-  
 <div class="banner-slider">
     <div class="wrap box">
         <div class="banner">
             {{ page.chipdyno_header_slider }}
+            {% if (logged_in == 0) %}
             <div class="Lets-start">
                 <a href="/user/register">Register Now</a>
             </div>
+            {% endif %}
         </div>
         <div class="clear"> </div>
         </div>
